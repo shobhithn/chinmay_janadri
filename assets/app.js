@@ -18,6 +18,12 @@
     items.forEach(function (el) { el.classList.add('in-view'); });
     return;
   }
+  // threshold:0 fires as soon as a single pixel of the target intersects.
+  // A ratio-based threshold (e.g. 0.15) requires that fraction of the
+  // TARGET's own height to be on-screen — for a short viewport (mobile)
+  // observing a tall element (a full article column), that ratio can
+  // never be reached, so the element sits at opacity:0 forever. Using 0
+  // avoids that regardless of how tall the observed element is.
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
@@ -25,7 +31,7 @@
         io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+  }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
   items.forEach(function (el) { io.observe(el); });
 })();
 
